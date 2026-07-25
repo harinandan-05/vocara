@@ -15,8 +15,10 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@types/axios": "^0.14.4",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "axios": "^1.18.1",
     "cors": "^2.8.6",
     "express": "^5.2.1"
   }
