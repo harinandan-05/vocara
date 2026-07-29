@@ -1,18 +1,19 @@
 import axios from 'axios'
 
-interface URL {
-    url : string
+interface repo {
+    id:number,
+    name:string,
+    description:string | null,
+    html_url:string,
+    language:string
 }
-
 export async function githubScraping(url:string) {
-
-    try{
 
     const username = url.split('/')[3];
     const apiUrl = `https://api.github.com/users/${username}/repos`
     const response = await axios.get(apiUrl)
 
-    const data = response.data.map((repo:any) => {
+    const data = response.data.map((repo:repo) => {
         return {
             id:repo.id,
             name:repo.name,
@@ -21,9 +22,5 @@ export async function githubScraping(url:string) {
             language:repo.language
         }
     })    
-
     return data;
-    }catch(err){
-        console.log(err)
-    }
 }

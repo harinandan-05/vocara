@@ -23,7 +23,7 @@ export default function Dashboard() {
     try {
 
       const data = await axios.post("http://localhost:3000/api/v1/dataurl", {
-        linkedinUrl: linkedin,
+        // linkedinUrl: linkedin,
         githubUrl: github,
       });
       
