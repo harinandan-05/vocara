@@ -1,4 +1,4 @@
-import express, {
+import {
   type NextFunction,
   type Request,
   type Response,

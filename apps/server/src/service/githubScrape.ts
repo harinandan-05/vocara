@@ -22,5 +22,8 @@ export async function githubScraping(url:string) {
             language:repo.language
         }
     })    
+    //TODO
+    // better return data like we are only fetching repo 
+    // instead fetch and use other api of github also and extract more context
     return data;
 }
