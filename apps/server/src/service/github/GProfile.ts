@@ -1,5 +1,5 @@
 import axios from "axios";
-import { da } from "zod/locales";
+import { gAnalyze } from "./analyze";
 
 interface repo {
     id:number,
@@ -13,7 +13,10 @@ interface repo {
     size:number,
     topics:string,
     pushed_at:string,
-    created_at:string
+    created_at:string,
+    owner: {
+        login:string
+    }
 }
 export async function getGithubProfile(url:string) {
     const username = url.split('/')[3];
@@ -30,9 +33,11 @@ export async function getGithubProfile(url:string) {
             stargazers_count:repo.stars,
             visibility:repo.visibility,
             pushed_at:repo.pushed_at,
-            created_at:repo.created_at
+            created_at:repo.created_at,
+            owner:repo.owner.login
         }
     })
-    console.log(data)
-    return data;
+    const filterdRepo = await gAnalyze(data)
+    
+    return filterdRepo.topRepositories;
 }

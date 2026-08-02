@@ -8,10 +8,13 @@ interface datas {
     stars:number,
     visibility: string,
     size:number,
-    topics:string[],
+    topics:string,
     pushed_at:string,
-    created_at:string
+    created_at:string,
+    owner:string
 }
+
+
 
 export async function gAnalyze(repositories:datas[]) {
     const candidateRepo:datas[] = [];
@@ -66,7 +69,7 @@ export async function gAnalyze(repositories:datas[]) {
             reason.push("Has more than 10 stars")
         } 
 
-        if(repo.topics.length > 0){
+        if(repo.topics){
             score += 3;
             reason.push("Has topics which are inside teh repo")
         }
@@ -79,7 +82,7 @@ export async function gAnalyze(repositories:datas[]) {
     }
     const finalRepositories:datas[] = rankedRepo.sort((a , b) => b.score - a.score)
 
-    const topRepositories =  finalRepositories.slice(0,10);
+    const topRepositories:datas[] =  finalRepositories.slice(0,10);
 
     return {
         topRepositories,

@@ -4,7 +4,7 @@ import {
   type Response,
 } from "express";
 import { githubUrlSchema } from "../zod.schema";
-import { getGithubProfile } from "../service/github/GProfile";
+import Gwrapper from "../service/github/Gwrapper";
 
 export const githubController = async (
   req: Request,
@@ -18,7 +18,7 @@ export const githubController = async (
       return res.status(400).json({ msg: "incorrect url" });
     }
 
-    const response = await getGithubProfile(result.data.githubUrl);
+    const response = await Gwrapper(result.data.githubUrl);
 
     if (!response) {
       return res.status(400).json({

@@ -19,7 +19,6 @@ export default function Dashboard() {
 
   async function getUrl() {
 
-    console.log(linkedin)
     try {
 
       const data = await axios.post("http://localhost:3000/api/v1/pre-interview/url", {
