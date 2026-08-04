@@ -16,7 +16,7 @@ interface datas {
 
 
 
-export async function gAnalyze(repositories:datas[]) {
+export async function getGithubAnalyze(repositories:datas[]) {
     const candidateRepo:datas[] = [];
     const nonCandidateRepo:datas[] = [];
 

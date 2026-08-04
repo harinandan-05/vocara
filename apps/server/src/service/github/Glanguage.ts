@@ -1,35 +1,38 @@
 import axios from "axios";
+import pLimit from "p-limit";
 
-interface repoData { 
-    id:number,
-    name:string,
-    description:string | null,
-    html_url:string,
-    language:string | null,
-    fork:boolean,
-    stars:number,
-    visibility: string,
-    size:number,
-    topics:string,
-    pushed_at:string,
-    created_at:string,
-    owner:string
+interface repoData {
+  id: number;
+  name: string;
+  description: string | null;
+  html_url: string;
+  language: string | null;
+  fork: boolean;
+  stars: number;
+  visibility: string;
+  size: number;
+  topics: string;
+  pushed_at: string;
+  created_at: string;
+  owner: string;
 }
 
+const limit = pLimit(3);
 
-export async function Glanguage(data:repoData[]) {
+export async function getGithubLanguage(data: repoData[]) {
 
-    const LanguageData:any = [];
-
-    for(const repo of data){
+  const tasks = data.map((repo) => 
+    limit(async() => {
         const username = repo.owner
-        const repos = repo.name
-        const response = await axios.get(`https://api.github.com/repos/${username}/${repos}/languages`)
-        LanguageData.push({
+        const repoName = repo.name
+        const response = await axios.get(`https://api.github.com/repos/${username}/${repoName}/languages`)
+        return {
             ...repo,
-            language:response.data   
+            languages:response.data
+        }
     })
-        break
-    }
-    return LanguageData;
-}   
+)
+
+  const results = await Promise.all(tasks)
+  return results;
+}

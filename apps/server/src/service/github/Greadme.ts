@@ -1,4 +1,5 @@
 import axios from "axios"
+import pLimit from "p-limit";
 
 interface repoData { 
     id:number,
@@ -16,29 +17,27 @@ interface repoData {
     owner:string
 }
 
+const limit = pLimit(3);
+
 export async function getGithubReadme(data:repoData[]){
 
-    // hit this endpoint  https://github.com{owner}/{repo}/readme
-    // we need owner name
-    // we need repo name
-    const readmeData = []
-
-    for(const repo of data){
-        const username = repo.owner
-        const repoName = repo.name
-
-        const response = await axios.get(`https://api.github.com/repos/${username}/${repoName}/readme`)
-
+    const tasks = data.map((repo) => 
+    limit(async() => {
+        const owner = repo.owner
+        const name = repo.name
+        console.log(`https://api.github.com/repos/${owner}/${name}/readme`);
+        const response = await axios.get(`https://api.github.com/repos/${owner}/${name}/readme`)
         const decode = Buffer.from(
             response.data.content,
             "base64"
         ).toString("utf-8")
-
-        readmeData.push({
+        return {
             ...repo,
-            readme:decode
-        })
-    }
+            readmeData:decode
+        }
+    })
+    )
 
-    return readmeData;
+    const results = await Promise.all(tasks)
+    return results;
 }

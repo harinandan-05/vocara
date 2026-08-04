@@ -1,5 +1,5 @@
 import axios from "axios";
-import { gAnalyze } from "./analyze";
+// import { gAnalyze } from "./Ganalyze";
 
 interface repo {
     id:number,
@@ -37,7 +37,6 @@ export async function getGithubProfile(url:string) {
             owner:repo.owner.login
         }
     })
-    const filterdRepo = await gAnalyze(data)
     
-    return filterdRepo.topRepositories;
+    return data;
 }
