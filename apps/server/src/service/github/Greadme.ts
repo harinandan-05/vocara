@@ -37,7 +37,7 @@ export async function getGithubReadme(data:repoData[]){
         }
     })
     )
-
-    const results = await Promise.all(tasks)
+    const results = await Promise.allSettled(tasks);
+    console.log("readme data" , results);
     return results;
 }

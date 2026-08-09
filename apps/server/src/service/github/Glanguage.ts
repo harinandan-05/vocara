@@ -33,6 +33,11 @@ export async function getGithubLanguage(data: repoData[]) {
     })
 )
 
-  const results = await Promise.all(tasks)
-  return results;
+
+  const results = await Promise.allSettled(tasks)
+
+  const settledResults = results.filter(r => r.status === "fulfilled").map(r => r.value)
+ 
+  return settledResults;
 }
+
