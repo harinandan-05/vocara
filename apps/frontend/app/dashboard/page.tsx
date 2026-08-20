@@ -12,10 +12,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+
+
 
 export default function Dashboard() {
   const [linkedin, setLinkedin] = useState("");
   const [github, setGithub] = useState("");
+  const router  = useRouter()
 
   async function getUrl() {
 
@@ -26,6 +30,7 @@ export default function Dashboard() {
         githubUrl: github,
       });
       
+      router.push('/interview')
     } catch (err) {
       console.log(err);
     }
@@ -75,6 +80,7 @@ export default function Dashboard() {
           <Button
             onClick={getUrl}
             className="w-full mt-2 rounded-none bg-black text-white font-bold hover:bg-black/80"
+
           >
             Submit
           </Button>
