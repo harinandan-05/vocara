@@ -13,5 +13,7 @@ export default async function GithubContextBuilder(data:string) {
 
     const readMeData = await getGithubReadme(langaugeData);
 
-    return readMeData;
+    return JSON.stringify(readMeData)
 }
+
+

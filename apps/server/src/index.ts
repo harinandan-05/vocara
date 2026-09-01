@@ -1,19 +1,22 @@
 import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
 import dataRoute from './routes/dataRoute';
-import cors from 'cors'
 import apiRoute from './routes/apiRoute';
 
-const app = express()
-const port = 3000;
-app.use(cors())
-app.use(express.json())
-apiRoute.use(express.text({ type: ["application/sdp", "text/plain"] }));
+dotenv.config();
 
-app.use('/api/v1',dataRoute)
-app.use('/api/v1',apiRoute)
-app.listen(port,() => {
-    console.log(`server up on port: ${port}`)
-})
+const app = express();
+const port = Number(process.env.PORT || 3000);
 
+app.use(cors());
+app.use(express.json());
 
-export default app
+app.use('/api/v1', dataRoute);
+app.use('/api/v1', apiRoute);
+
+app.listen(port, () => {
+  console.log(`server up on port: ${port}`);
+});
+
+export default app;
