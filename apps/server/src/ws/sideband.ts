@@ -56,19 +56,23 @@ export default async function Sideband(callId: string, interviewId: string, gitH
   });
 
   ws.on("message", async function incoming(message) {
-    const event = JSON.parse(message.toString())
+    const event = JSON.parse(message.toString());
 
-    if(event.type == "response.audio_transcript.done"){
-      const transcript = event.transcript
+    if (event.type === "response.audio_transcript.done" && event.transcript) {
+      const transcript = event.transcript;
+      console.log("transcript", transcript);
 
-      const assistantTranscript = await prisma.assistant.create({
-        data:{
-          id:interviewId,
-          transcript:transcript
-        }
-      })
+      try {
+        await prisma.assistant.create({
+          data: {
+            id: crypto.randomUUID(),
+            transcript,
+          },
+        });
+      } catch (error) {
+        console.error("Failed to save assistant transcript:", error);
+      }
     }
-    
   });
 
   ws.on("error", (error) => {

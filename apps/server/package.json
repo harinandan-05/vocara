@@ -17,6 +17,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@deepgram/sdk": "^5.9.0",
     "@playwright/test": "^1.62.0",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",

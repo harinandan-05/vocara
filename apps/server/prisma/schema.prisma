@@ -37,15 +37,20 @@ model Meeting{
 
 
 model Interview {
-  id            String   @id
-  githubUrl     String
+  id          String      @id
+  githubUrl   String
   githubContext String
-  createdAt     DateTime @default(now())
+  createdAt   DateTime    @default(now())
+  transcripts Assistant[]
 }
 
 
+
 model Assistant {
-  id          String    @id
+  id          String    @id @default(cuid())
+  interviewId String
   transcript  String
   Timestamp   DateTime  @default(now())
+
+  interview Interview @relation(fields: [interviewId], references: [id])
 }
