@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function Interview() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const interviewId = "demo-interview";
+    const interviewId = searchParams.get("interviewId") ?? "demo-interview";
 
     (async () => {
       try {
@@ -49,7 +51,7 @@ export default function Interview() {
         console.error("Interview setup failed:", error);
       }
     })();
-  }, []);
+  }, [searchParams]);
 
   return (
     <div>

@@ -1,5 +1,6 @@
 import express from "express";
 import Sideband from "../ws/sideband";
+import { getInterviewContext } from "../lib/interviewContext";
 
 const apiRoute = express.Router();
 
@@ -13,6 +14,7 @@ apiRoute.use(express.text({ type: ["application/sdp", "text/plain"] }));
 
 apiRoute.post("/session/:interviewId", async (req, res) => {
   const apiKey = process.env.OPENAI_API_KEY ?? process.env.OPEN_API;
+  const interviewId = req.params.interviewId;
 
   if (!apiKey) {
     return res.status(500).json({ error: "Missing OpenAI API key." });
@@ -44,8 +46,9 @@ apiRoute.post("/session/:interviewId", async (req, res) => {
       return res.status(502).json({ error: "Realtime session was not created." });
     }
 
-    const interviewId = req.params.interviewId;
-    Sideband(callId, interviewId);
+    const context = getInterviewContext(interviewId);
+    console.log(context,"context of the github")
+    Sideband(callId, interviewId, context);
 
     return res.send(sdp);
   } catch (error) {

@@ -21,6 +21,7 @@ model User {
   Attended  Int
   Github    String
   role      String
+  context   String
 }
 
 
@@ -34,3 +35,17 @@ model Meeting{
   Score         Int
 }
 
+
+model Interview {
+  id            String   @id
+  githubUrl     String
+  githubContext String
+  createdAt     DateTime @default(now())
+}
+
+
+model Assistant {
+  id          String    @id
+  transcript  String
+  Timestamp   DateTime  @default(now())
+}

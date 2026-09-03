@@ -25,7 +25,6 @@ export async function getGithubReadme(data:repoData[]){
     limit(async() => {
         const owner = repo.owner
         const name = repo.name
-        console.log(`https://api.github.com/repos/${owner}/${name}/readme`);
         const response = await axios.get(`https://api.github.com/repos/${owner}/${name}/readme`)
         const decode = Buffer.from(
             response.data.content,

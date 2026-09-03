@@ -6,6 +6,8 @@ import {
 
 import { githubUrlSchema } from "../zod.schema";
 import GithubContextBuilder from "../service/github/GithubContext";
+import { setInterviewContext } from "../lib/interviewContext";
+import { prisma } from "../db.prisma";
 
 export const githubController = async (
   req: Request,
@@ -13,22 +15,37 @@ export const githubController = async (
   next: NextFunction,
 ) => {
   try {
+    const interviewIdParam = req.params.interviewId;
+    const interviewId = Array.isArray(interviewIdParam)
+      ? interviewIdParam[0]
+      : interviewIdParam;
     const result = githubUrlSchema.safeParse(req.body);
+
+    if (!interviewId) {
+      return res.status(400).json({ msg: "missing interview id" });
+    }
 
     if (!result.success) {
       return res.status(400).json({ msg: "incorrect url" });
     }
 
-    const response = await GithubContextBuilder(result.data.githubUrl);
+    const responseContext = await GithubContextBuilder(result.data.githubUrl);
 
-    if (!response) {
-      return res.status(400).json({
-        success: false,
-        errors: result.error,
-      });
-    }
+    await prisma.interview.create({
+      data: {
+        id: interviewId,
+        githubUrl: result.data.githubUrl,
+        githubContext: responseContext,
+      },
+    });
 
-    return res.status(200).json({ msg: "data fetched ", response });
+    setInterviewContext(interviewId, responseContext);
+
+    return res.status(200).json({
+      msg: "data fetched",
+      interviewId,
+      response: responseContext,
+    });
   } catch (err) {
     throw err;
   }

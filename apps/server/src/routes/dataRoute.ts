@@ -1,8 +1,8 @@
-import express from 'express'
-import { githubController } from '../controllers/githubController'
+import express from 'express';
+import { githubController } from '../controllers/githubController';
 
-const dataRoute = express.Router()
+const dataRoute = express.Router();
 
-dataRoute.post('/pre-interview/url', githubController)
+dataRoute.post('/pre-interview/url/:interviewId', githubController);
 
 export default dataRoute;

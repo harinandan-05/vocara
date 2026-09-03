@@ -22,15 +22,14 @@ export default function Dashboard() {
   const router  = useRouter()
 
   async function getUrl() {
-
     try {
+      const interviewId = crypto.randomUUID();
 
-      const data = await axios.post("http://localhost:3000/api/v1/pre-interview/url", {
-        // linkedinUrl: linkedin,
+      await axios.post(`http://localhost:3000/api/v1/pre-interview/url/${interviewId}`, {
         githubUrl: github,
       });
-      
-      router.push('/interview')
+
+      router.push(`/interview?interviewId=${interviewId}`);
     } catch (err) {
       console.log(err);
     }
