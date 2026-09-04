@@ -42,6 +42,7 @@ model Interview {
   githubContext String
   createdAt   DateTime    @default(now())
   transcripts Assistant[]
+  userTranscript  UserTranscript[]
 }
 
 
@@ -51,6 +52,14 @@ model Assistant {
   interviewId String
   transcript  String
   Timestamp   DateTime  @default(now())
-
   interview Interview @relation(fields: [interviewId], references: [id])
+}
+
+
+model UserTranscript {
+  id        String       @id@default(cuid())
+  interviewId String
+  transcript  String
+  Timestamp   DateTime  @default(now())
+  interview   Interview @relation(fields: [interviewId], references: [id])
 }

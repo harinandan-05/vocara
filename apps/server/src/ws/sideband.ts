@@ -67,6 +67,9 @@ export default async function Sideband(callId: string, interviewId: string, gitH
           data: {
             id: crypto.randomUUID(),
             transcript,
+            interview: {
+              connect: { id: interviewId },
+            },
           },
         });
       } catch (error) {

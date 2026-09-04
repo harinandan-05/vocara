@@ -2,12 +2,21 @@
 
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { DeepgramClient } from "@deepgram/sdk";
+import axios from "axios";
 
 export default function Interview() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const searchParams = useSearchParams();
-  const client = new DeepgramClient();
+
+  async function userTranscript(transcript: string, interviewId: string) {
+    try {
+      await axios.post(`http://localhost:3000/api/v1/user-message/${interviewId}`, {
+        userMessage: transcript,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   useEffect(() => {
     const interviewId = searchParams.get("interviewId") ?? "demo-interview";
@@ -29,8 +38,8 @@ export default function Interview() {
         const ms = await navigator.mediaDevices.getUserMedia({ audio: true });
 
          const socket = new WebSocket(
-    `wss://://deepgram.com`,
-    ['token', process.env.DEEPGRAM_API_KEY! ?? "97f06900df4798b9fb55110ab794daf0b234dbf6"]
+    `wss://api.deepgram.com/v1/listen`,
+    ['token', process.env.DEEPGRAM_API_KEY!]
   );
 
   socket.onopen = () => {
@@ -44,39 +53,39 @@ export default function Interview() {
 
   }
 
-  socket.onmessage = (e) =>{
+    socket.onmessage = async (e) => {
     const recved = JSON.parse(e.data);
     const transcript = recved.channel.alternatives[0].transcript;
 
-    if(transcript){
-      console.log("final",transcript)
+    if (transcript) {
+      await userTranscript(transcript, interviewId);
     }
-  }
+  };
 
 
-      //   pc.addTrack(ms.getTracks()[0]);
+        pc.addTrack(ms.getTracks()[0]);
 
-      //   const offer = await pc.createOffer();
-      //   await pc.setLocalDescription(offer);
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
 
-      //   const sdpResponse = await fetch(`${apiBaseUrl}/api/v1/session/${interviewId}`, {
-      //     method: "POST",
-      //     body: offer.sdp,
-      //     headers: {
-      //       "Content-Type": "application/sdp",
-      //     },
-      //   });
+        const sdpResponse = await fetch(`${apiBaseUrl}/api/v1/session/${interviewId}`, {
+          method: "POST",
+          body: offer.sdp,
+          headers: {
+            "Content-Type": "application/sdp",
+          },
+        });
 
-      //   if (!sdpResponse.ok) {
-      //     throw new Error(`Failed to create session: ${await sdpResponse.text()}`);
-      //   }
+        if (!sdpResponse.ok) {
+          throw new Error(`Failed to create session: ${await sdpResponse.text()}`);
+        }
 
-      //   const answer = {
-      //     type: "answer" as const,
-      //     sdp: await sdpResponse.text(),
-      //   };
+        const answer = {
+          type: "answer" as const,
+          sdp: await sdpResponse.text(),
+        };
 
-      //   await pc.setRemoteDescription(answer);
+        await pc.setRemoteDescription(answer);
       } catch (error) {
         console.error("Interview setup failed:", error);
       }
