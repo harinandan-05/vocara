@@ -30,12 +30,14 @@ export const githubController = async (
     }
 
     const responseContext = await GithubContextBuilder(result.data.githubUrl);
+    const userId = req.body.userId ? Number(req.body.userId) : null;
 
     await prisma.interview.create({
       data: {
         id: interviewId,
         githubUrl: result.data.githubUrl,
         githubContext: responseContext,
+        userId: userId || undefined,
       },
     });
 

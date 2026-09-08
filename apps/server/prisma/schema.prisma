@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -14,14 +9,18 @@ datasource db {
 
 
 model User {
-  id        Int     @default(autoincrement())@id
+  id        Int       @default(autoincrement()) @id
+  googleId  String?   @unique
   name      String
-  email     String  @unique
-  password  String
-  Attended  Int
-  Github    String
-  role      String
-  context   String
+  email     String    @unique
+  avatarUrl String?
+  password  String?
+  Attended  Int?      @default(0)
+  Github    String?   @default("")
+  role      String    @default("candidate")
+  context   String?   @default("")
+  createdAt DateTime  @default(now())
+  interviews Interview[]
 }
 
 
@@ -37,12 +36,32 @@ model Meeting{
 
 
 model Interview {
-  id          String      @id
-  githubUrl   String
+  id            String          @id
+  userId        Int?
+  user          User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  githubUrl     String
   githubContext String
-  createdAt   DateTime    @default(now())
-  transcripts Assistant[]
-  userTranscript  UserTranscript[]
+  createdAt     DateTime        @default(now())
+  transcripts   Assistant[]
+  userTranscript UserTranscript[]
+  evaluation    Evaluation?
+}
+
+model Evaluation {
+  id                    String      @id @default(cuid())
+  interviewId           String      @unique
+  overallScore          Float
+  technicalScore        Float
+  problemSolvingScore   Float
+  communicationScore    Float
+  projectKnowledgeScore Float
+  verdict               String
+  summary               String
+  strengths             Json
+  improvements          Json
+  qnaEvaluation         Json
+  createdAt             DateTime    @default(now())
+  interview             Interview   @relation(fields: [interviewId], references: [id], onDelete: Cascade)
 }
 
 

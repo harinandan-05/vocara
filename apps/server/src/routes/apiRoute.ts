@@ -47,7 +47,6 @@ apiRoute.post("/session/:interviewId", async (req, res) => {
     }
 
     const context = getInterviewContext(interviewId);
-    console.log(context,"context of the github")
     Sideband(callId, interviewId, context);
 
     return res.send(sdp);

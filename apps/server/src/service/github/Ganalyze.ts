@@ -20,9 +20,6 @@ export async function getGithubAnalyze(repositories:datas[]) {
     const candidateRepo:datas[] = [];
     const nonCandidateRepo:datas[] = [];
 
-
-    // filtering logic here
-
     for(const repo of repositories){
 
         if(repo.fork){
@@ -37,7 +34,6 @@ export async function getGithubAnalyze(repositories:datas[]) {
         candidateRepo.push(repo);
     }
 
-    // ranking logic iam writing here
     const rankedRepo = [];
     
     for(const repo of candidateRepo){

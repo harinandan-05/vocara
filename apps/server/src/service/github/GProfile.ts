@@ -1,5 +1,4 @@
 import axios from "axios";
-// import { gAnalyze } from "./Ganalyze";
 
 interface repo {
     id:number,
